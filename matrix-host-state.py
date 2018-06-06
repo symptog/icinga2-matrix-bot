@@ -33,9 +33,8 @@ MSG_PLAIN = """Host {HOSTDISPLAYNAME} is {HOSTSTATE}
 # Message in markdown
 MSG_MD = """**<font color="{COLOR}">Host {HOSTDISPLAYNAME} is {HOSTSTATE}</font>**
 
-```
-{HOSTOUTPUT}
-```
+> {HOSTOUTPUT}
+>
 
 *{LONGDATETIME} - [Show in Icinga2](https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME})* 
 """.format(**DATA)

@@ -37,9 +37,8 @@ MSG_PLAIN = """Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTAT
 # Message in markdown
 MSG_MD = """**<font color="{COLOR}">Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTATE}</font>**
 
-```
-{SERVICEOUTPUT}
-```
+> {SERVICEOUTPUT}
+>
 
 *{LONGDATETIME} - [Show in Icinga2](https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}&service={SERVICEDESC})* 
 """.format(**DATA)
