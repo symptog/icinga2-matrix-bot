@@ -8,7 +8,7 @@ from markdown2 import Markdown
 
 from config import ICINGA_HOSTNAME, MATRIX_HOMESERVER, MATRIX_TOKEN, MATRIX_ROOM
 
-
+# Format Icinag2 status to color
 if environ["SERVICESTATE"] == "CRITICAL":
     COLOR="#ff0000"
 elif environ["SERVICESTATE"] == "WARNING":
@@ -26,7 +26,16 @@ DATA = {
 }
 DATA.update(environ)
 
-MSG = """**<font color="{COLOR}">Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTATE}</font>**
+# Message without formating
+MSG_PLAIN = """Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTATE}
+
+{SERVICEOUTPUT}
+
+{LONGDATETIME} - Show in Icinga2: https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}&service={SERVICEDESC}
+""".format(**DATA)
+
+# Message in markdown
+MSG_MD = """**<font color="{COLOR}">Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTATE}</font>**
 
 ```
 {SERVICEOUTPUT}
@@ -35,16 +44,17 @@ MSG = """**<font color="{COLOR}">Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAM
 *{LONGDATETIME} - [Show in Icinga2](https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}&service={SERVICEDESC})* 
 """.format(**DATA)
 
-markdowner = Markdown()
-
+# Init matrix API
 matrix = MatrixHttpApi(MATRIX_HOMESERVER, token=MATRIX_TOKEN)
+
+# Send message in both formats to channel
 response = matrix.send_message_event(
     room_id=MATRIX_ROOM,
     event_type="m.room.message",
     content={
         "msgtype": "m.text",
         "format": "org.matrix.custom.html",
-        "body": MSG,
-        "formatted_body": markdowner.convert(MSG),
+        "body": MSG_PLAIN,
+        "formatted_body": Markdown().convert(MSG_MD),
     }
 )
