@@ -6,10 +6,8 @@ from os import environ
 from matrix_client.api import MatrixHttpApi
 from markdown2 import Markdown
 
-ICINGA_HOSTNAME = ""
-MATRIX_HOMESERVER = ""
-MATRIX_TOKEN = ""
-MATRIX_ROOM = ""
+from config import ICINGA_HOSTNAME, MATRIX_HOMESERVER, MATRIX_TOKEN, MATRIX_ROOM
+
 
 if environ["SERVICESTATE"] == "CRITICAL":
     COLOR="#ff0000"
