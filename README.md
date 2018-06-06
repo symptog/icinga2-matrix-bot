@@ -1,4 +1,4 @@
-# Icinag2 Matrix Bot
+# Icinga2 Matrix Bot
 
 System requirements:
 
