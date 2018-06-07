@@ -20,27 +20,43 @@ elif environ["SERVICESTATE"] == "UNKNOWN":
 else:
     COLOR="#e6e6e6"
 
+# If notification has comment
+if environ["NOTIFICATIONCOMMENT"]:
+    COMMENT_PLAIN = """
+{NOTIFICATIONCOMMENT} - {NOTIFICATIONAUTHORNAME}
+
+""".format(**environ)
+    COMMENT_MD = """
+> {NOTIFICATIONCOMMENT}
+*- {NOTIFICATIONAUTHORNAME}*
+
+""".format(**environ)
+else:
+    COMMENT_PLAIN = ""
+    COMMENT_MD = ""
+
 DATA = {
     "ICINGA_HOSTNAME": ICINGA_HOSTNAME,
     "COLOR": COLOR,
+    "COMMENT_PLAIN": COMMENT_PLAIN,
+    "COMMENT_MD": COMMENT_MD,
 }
 DATA.update(environ)
 
 # Message without formating
-MSG_PLAIN = """Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTATE}
+MSG_PLAIN = """[$NOTIFICATIONTYPE] Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTATE}
 
 {SERVICEOUTPUT}
-
+{COMMENT_PLAIN}
 {LONGDATETIME} - Show in Icinga2: https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}&service={SERVICEDESC}
 """.format(**DATA)
 
 # Message in markdown
-MSG_MD = """**<font color="{COLOR}">Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTATE}</font>**
+MSG_MD = """**<font color="{COLOR}">[$NOTIFICATIONTYPE] Service {SERVICEDISPLAYNAME} on {HOSTDISPLAYNAME} is {SERVICESTATE}</font>**
 
 > {SERVICEOUTPUT}
->
-
-*{LONGDATETIME} - [Show in Icinga2](https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}&service={SERVICEDESC})* 
+{COMMENT_MD}
+*{LONGDATETIME} - [Show in Icinga2](https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}&service={SERVICEDESC})*
 """.format(**DATA)
 
 # Init matrix API
