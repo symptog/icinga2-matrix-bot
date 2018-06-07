@@ -19,17 +19,17 @@ else:
 # If notification has comment
 if environ["NOTIFICATIONCOMMENT"]:
     COMMENT_PLAIN = """
-{NOTIFICATIONCOMMENT} - {NOTIFICATIONAUTHORNAME}
-
+Comment by {NOTIFICATIONAUTHORNAME}:
+    {NOTIFICATIONCOMMENT}
 """.format(**environ)
-    COMMENT_MD = """
+    COMMENT_MD = """>
+> *Comment by {NOTIFICATIONAUTHORNAME}:*
+>
 > {NOTIFICATIONCOMMENT}
-*- {NOTIFICATIONAUTHORNAME}*
-
-""".format(**environ)
+>""".format(**environ)
 else:
-    COMMENT_PLAIN = ""
-    COMMENT_MD = ""
+    COMMENT_PLAIN = ">"
+    COMMENT_MD = ">"
 
 DATA = {
     "ICINGA_HOSTNAME": ICINGA_HOSTNAME,
@@ -40,19 +40,22 @@ DATA = {
 DATA.update(environ)
 
 # Message without formating
-MSG_PLAIN = """[$NOTIFICATIONTYPE] Host {HOSTDISPLAYNAME} is {HOSTSTATE}
+MSG_PLAIN = """[{NOTIFICATIONTYPE}] Host {HOSTDISPLAYNAME} is {HOSTSTATE}
 
-{HOSTOUTPUT}
+Info:   {HOSTOUTPUT}
+When:   {LONGDATETIME}
 {COMMENT_PLAIN}
-{LONGDATETIME} - Show in Icinga2: https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}
+https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}
 """.format(**DATA)
 
 # Message in markdown
-MSG_MD = """**<font color="{COLOR}">[$NOTIFICATIONTYPE] Host {HOSTDISPLAYNAME} is {HOSTSTATE}</font>**
+MSG_MD = """**<font color="{COLOR}">[{NOTIFICATIONTYPE}] Host {HOSTDISPLAYNAME} is {HOSTSTATE}</font>**
 
+> *Info:*
+>
 > {HOSTOUTPUT}
 {COMMENT_MD}
-*{LONGDATETIME} - [Show in Icinga2](https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME})*
+> *{LONGDATETIME} - [Show in Icinga2](https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME})*
 """.format(**DATA)
 
 # Init matrix API
