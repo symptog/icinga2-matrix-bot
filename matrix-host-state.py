@@ -6,8 +6,6 @@ from os import environ
 from matrix_client.api import MatrixHttpApi
 from markdown2 import Markdown
 
-from config import ICINGA_HOSTNAME, MATRIX_HOMESERVER, MATRIX_TOKEN, MATRIX_ROOM
-
 # Format Icinag2 status to color
 if environ["HOSTSTATE"] == "DOWN":
     COLOR="#ff0000"
@@ -33,7 +31,6 @@ else:
     COMMENT_MD = ">"
 
 DATA = {
-    "ICINGA_HOSTNAME": ICINGA_HOSTNAME,
     "COLOR": COLOR,
     "COMMENT_PLAIN": COMMENT_PLAIN,
     "COMMENT_MD": COMMENT_MD,
@@ -46,7 +43,7 @@ MSG_PLAIN = """[{NOTIFICATIONTYPE}] Host {HOSTDISPLAYNAME} is {HOSTSTATE}
 Info:   {HOSTOUTPUT}
 When:   {LONGDATETIME}
 {COMMENT_PLAIN}
-https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME}
+{ICINGA_WEBURL}/monitoring/host/show?host={HOSTNAME}
 """.format(**DATA)
 
 # Message in markdown
@@ -56,15 +53,15 @@ MSG_MD = """**<font color="{COLOR}">[{NOTIFICATIONTYPE}] Host {HOSTDISPLAYNAME} 
 >
 > {HOSTOUTPUT}
 {COMMENT_MD}
-> *{LONGDATETIME} - [Show in Icinga2](https://{ICINGA_HOSTNAME}/icingaweb2/monitoring/host/show?host={HOSTNAME})*
+> *{LONGDATETIME} - [Show in Icinga2]({ICINGA_WEBURL}/monitoring/host/show?host={HOSTNAME})*
 """.format(**DATA)
 
 # Init matrix API
-matrix = MatrixHttpApi(MATRIX_HOMESERVER, token=MATRIX_TOKEN)
+matrix = MatrixHttpApi(environ['MATRIX_SERVER'], token=environ['MATRIX_TOKEN'])
 
 # Send message in both formats to channel
 response = matrix.send_message_event(
-    room_id=MATRIX_ROOM,
+    room_id=environ['MATRIX_CHANNEL'],
     event_type="m.room.message",
     content={
         "msgtype": "m.text",

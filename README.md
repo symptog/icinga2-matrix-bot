@@ -19,10 +19,7 @@ $ cd icinga2-matrix-bot
 $ virtualenv .venv
 $ source .venv/bin/activate
 $ pip install -r requirements.txt
-$ cp config.sample.py config.py
 ```
-
-Change the settings in `config.py` to your needs.
 
 ## Setup Icinga2
 
@@ -35,5 +32,12 @@ Change the settings in `config.py` to your needs.
   * Add the contents of `icinga2/matrix-commands.conf` to `/etc/icinga2/conf.d/commands.conf`
   * Add the contents of `icinga2/matrix-notifications.conf` to `/etc/icinga2/conf.d/notifications.conf`
   * Add the contents of `icinga2/matrix-templates.conf` to `/etc/icinga2/conf.d/templates.conf`
+  * Add the contents of `icinga2/matrix-users.conf` to `/etc/icinga2/conf.d/users.conf`
+  * Add the following to your host objects:
+    ```
+    vars.notification["matrix"] = {
+      groups = [ "matrix" ]
+    }
+    ```
 
 
