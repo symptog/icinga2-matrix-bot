@@ -22,13 +22,14 @@ if environ["NOTIFICATIONCOMMENT"]:
 Comment by {NOTIFICATIONAUTHORNAME}:
     {NOTIFICATIONCOMMENT}
 """.format(**environ)
+
     COMMENT_MD = """>
 > *Comment by {NOTIFICATIONAUTHORNAME}:*
 >
 > {NOTIFICATIONCOMMENT}
 >""".format(**environ)
 else:
-    COMMENT_PLAIN = ">"
+    COMMENT_PLAIN = ""
     COMMENT_MD = ">"
 
 DATA = {
